@@ -532,8 +532,12 @@ int process_segment_for_detection(stream_detection_thread_t *thread, const char 
 
             // OPTIMIZATION: Process only key frames (I-frames) to reduce CPU usage
             // Check if this is a key frame (I-frame)
-            // Note: key_frame member was removed in newer FFmpeg, use AV_FRAME_FLAG_KEY instead
+            // Note: AV_FRAME_FLAG_KEY is only available in FFmpeg 5.1+, use key_frame field for older versions
+            #ifdef AV_FRAME_FLAG_KEY
             bool is_key_frame = (frame->flags & AV_FRAME_FLAG_KEY) || (frame->pict_type == AV_PICTURE_TYPE_I);
+            #else
+            bool is_key_frame = (frame->key_frame) || (frame->pict_type == AV_PICTURE_TYPE_I);
+            #endif
 
             if (is_key_frame) {
                 log_info("[Stream %s] Processing key frame %d (pict_type: %d, flags: 0x%x)",

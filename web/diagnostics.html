@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LightNVR Complete Diagnostics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .status-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-error {
+            background: #ef4444;
+            color: white;
+        }
+
+        .status-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .status-info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .status-pending {
+            background: #6b7280;
+            color: white;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .log {
+            background: #0f172a;
+            padding: 16px;
+            border-radius: 8px;
+            margin-top: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .log-line {
+            margin: 4px 0;
+        }
+
+        .log-success {
+            color: #10b981;
+        }
+
+        .log-error {
+            color: #ef4444;
+        }
+
+        .log-warning {
+            color: #f59e0b;
+        }
+
+        .log-info {
+            color: #60a5fa;
+        }
+
+        video {
+            width: 100%;
+            max-width: 640px;
+            height: auto;
+            background: #000;
+            border: 2px solid rgba(148, 163, 184, 0.2);
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        .summary {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border: 2px solid rgba(59, 130, 246, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .summary-item {
+            text-align: center;
+            padding: 16px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 12px;
+        }
+
+        .summary-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .summary-label {
+            color: #94a3b8;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+        }
+
+        .icon {
+            font-size: 1.5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(148, 163, 184, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔍 LightNVR Complete Diagnostics</h1>
+        <p class="subtitle">Comprehensive system testing and analysis</p>
+
+        <!-- Summary Section -->
+        <div class="summary" id="summary" style="display: none;">
+            <h2>📊 Test Summary</h2>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-number" id="total-tests">0</div>
+                    <div class="summary-label">Total Tests</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-number log-success" id="passed-tests">0</div>
+                    <div class="summary-label">Passed</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-number log-error" id="failed-tests">0</div>
+                    <div class="summary-label">Failed</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-number log-warning" id="warning-tests">0</div>
+                    <div class="summary-label">Warnings</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card">
+            <h2><span class="icon">⚡</span> Quick Actions</h2>
+            <button onclick="runAllTests()">🚀 Run All Tests</button>
+            <button onclick="clearAllLogs()">🗑️ Clear All Logs</button>
+            <button onclick="exportReport()">📄 Export Report</button>
+        </div>
+
+        <!-- Test Grid -->
+        <div class="grid">
+            <!-- Backend Tests -->
+            <div class="card">
+                <h2><span class="icon">🔧</span> Backend Services <span class="status-badge status-pending"
+                        id="backend-status">PENDING</span></h2>
+                <button onclick="testBackend()">Test Backend</button>
+                <div class="log" id="backend-log"></div>
+            </div>
+
+            <!-- API Tests -->
+            <div class="card">
+                <h2><span class="icon">🌐</span> API Endpoints <span class="status-badge status-pending"
+                        id="api-status">PENDING</span></h2>
+                <button onclick="testAPIs()">Test All APIs</button>
+                <div class="log" id="api-log"></div>
+            </div>
+
+            <!-- go2rtc Tests -->
+            <div class="card">
+                <h2><span class="icon">📡</span> go2rtc Streaming <span class="status-badge status-pending"
+                        id="go2rtc-status">PENDING</span></h2>
+                <button onclick="testGo2RTC()">Test go2rtc</button>
+                <div class="log" id="go2rtc-log"></div>
+            </div>
+
+            <!-- Database Tests -->
+            <div class="card">
+                <h2><span class="icon">💾</span> Database <span class="status-badge status-pending"
+                        id="db-status">PENDING</span></h2>
+                <button onclick="testDatabase()">Test Database</button>
+                <div class="log" id="db-log"></div>
+            </div>
+
+            <!-- HLS Streaming Test -->
+            <div class="card">
+                <h2><span class="icon">📹</span> HLS Live Stream <span class="status-badge status-pending"
+                        id="hls-status">PENDING</span></h2>
+                <button onclick="testHLS()">Test HLS Stream</button>
+                <div class="log" id="hls-log"></div>
+                <video id="hls-video" autoplay muted playsinline controls></video>
+            </div>
+
+            <!-- Playback Test -->
+            <div class="card">
+                <h2><span class="icon">▶️</span> Video Playback <span class="status-badge status-pending"
+                        id="playback-status">PENDING</span></h2>
+                <button onclick="testPlayback()">Test Playback</button>
+                <div class="log" id="playback-log"></div>
+                <video id="playback-video" controls></video>
+            </div>
+
+            <!-- Recording Test -->
+            <div class="card">
+                <h2><span class="icon">⏺️</span> Recording System <span class="status-badge status-pending"
+                        id="recording-status">PENDING</span></h2>
+                <button onclick="testRecording()">Test Recording</button>
+                <div class="log" id="recording-log"></div>
+            </div>
+
+            <!-- Authentication Test -->
+            <div class="card">
+                <h2><span class="icon">🔐</span> Authentication <span class="status-badge status-pending"
+                        id="auth-status">PENDING</span></h2>
+                <button onclick="testAuth()">Test Auth</button>
+                <div class="log" id="auth-log"></div>
+            </div>
+
+            <!-- Storage Test -->
+            <div class="card">
+                <h2><span class="icon">💿</span> Storage System <span class="status-badge status-pending"
+                        id="storage-status">PENDING</span></h2>
+                <button onclick="testStorage()">Test Storage</button>
+                <div class="log" id="storage-log"></div>
+            </div>
+
+            <!-- Network Test -->
+            <div class="card">
+                <h2><span class="icon">🌍</span> Network & Connectivity <span class="status-badge status-pending"
+                        id="network-status">PENDING</span></h2>
+                <button onclick="testNetwork()">Test Network</button>
+                <div class="log" id="network-log"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        let testResults = {
+            total: 0,
+            passed: 0,
+            failed: 0,
+            warnings: 0
+        };
+
+        function log(elementId, message, type = 'info') {
+            const el = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const className = `log-${type}`;
+            el.innerHTML += `<div class="log-line ${className}">[${timestamp}] ${message}</div>`;
+            el.scrollTop = el.scrollHeight;
+        }
+
+        function updateStatus(statusId, status) {
+            const el = document.getElementById(statusId);
+            el.className = 'status-badge status-' + status.toLowerCase();
+            el.textContent = status;
+        }
+
+        function updateSummary() {
+            document.getElementById('summary').style.display = 'block';
+            document.getElementById('total-tests').textContent = testResults.total;
+            document.getElementById('passed-tests').textContent = testResults.passed;
+            document.getElementById('failed-tests').textContent = testResults.failed;
+            document.getElementById('warning-tests').textContent = testResults.warnings;
+
+            const progress = testResults.total > 0 ? (testResults.passed / testResults.total) * 100 : 0;
+            document.getElementById('progress').style.width = progress + '%';
+        }
+
+        function recordResult(passed, warning = false) {
+            testResults.total++;
+            if (passed) {
+                testResults.passed++;
+            } else if (warning) {
+                testResults.warnings++;
+            } else {
+                testResults.failed++;
+            }
+            updateSummary();
+        }
+
+        async function testBackend() {
+            const logId = 'backend-log';
+            document.getElementById(logId).innerHTML = '';
+            log(logId, '🔍 Testing backend services...', 'info');
+
+            try {
+                // Test main server
+                const response = await fetch('/');
+                log(logId, `Main server: ${response.status} ${response.statusText}`, response.ok ? 'success' : 'error');
+                recordResult(response.ok);
+
+                // Test if server is responsive
+                const start = Date.now();
+                await fetch('/api/system/info');
+                const latency = Date.now() - start;
+                log(logId, `Server latency: ${latency}ms`, latency < 1000 ? 'success' : 'warning');
+                recordResult(latency < 1000, latency >= 1000);
+
+                updateStatus('backend-status', 'SUCCESS');
+            } catch (error) {
+                log(logId, `❌ Error: ${error.message}`, 'error');
+                updateStatus('backend-status', 'ERROR');
+                recordResult(false);
+            }
+        }
+
+        async function testAPIs() {
+            const logId = 'api-log';
+            document.getElementById(logId).innerHTML = '';
+            log(logId, '🌐 Testing API endpoints...', 'info');
+
+            const endpoints = [
+                '/api/system/info',
+                '/api/streams',
+                '/api/recordings',
+                '/api/settings'
+            ];
+
+            let allPassed = true;
+
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(endpoint);
+                    const passed = response.ok;
+                    log(logId, `${endpoint}: ${response.status}`, passed ? 'success' : 'error');
+                    recordResult(passed);
+                    if (!passed) allPassed = false;
+                } catch (error) {
+                    log(logId, `${endpoint}: ❌ ${error.message}`, 'error');
+                    recordResult(false);
+                    allPassed = false;
+                }
+            }
+
+            updateStatus('api-status', allPassed ? 'SUCCESS' : 'ERROR');
+        }
+
+        async function testGo2RTC() {
+            const logId = 'go2rtc-log';
+            document.getElementById(logId).innerHTML = '';
+            log(logId, '📡 Testing go2rtc...', 'info');
+
+            try {
+                const response = await fetch('http://localhost:1984/api/streams');
+                log(logId, `go2rtc status: ${response.status}`, response.ok ? 'success' : 'error');
+                recordResult(response.ok);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const streamCount = Object.keys(data).length;
+                    log(logId, `Found ${streamCount} stream(s)`, 'success');
+
+                    Object.keys(data).forEach(streamName => {
+                        const stream = data[streamName];
+                        const producers = stream.producers?.length || 0;
+                        log(logId, `  📹 ${streamName}: ${producers} producer(s)`, producers > 0 ? 'success' : 'warning');
+                    });
+                    recordResult(streamCount > 0, streamCount === 0);
+                }
+
+                updateStatus('go2rtc-status', 'SUCCESS');
+            } catch (error) {
+                log(logId, `❌ Error: ${error.message}`, 'error');
+                updateStatus('go2rtc-status', 'ERROR');
+                recordResult(false);
+            }
+        }
+
+        async function testDatabase() {
+            const logId = 'db-log';
+            document.getElementById(logId).innerHTML = '';
+            log(logId, '💾 Testing database...', 'info');
+
+            try {
+                const response = await fetch('/api/streams');
+                log(logId, `Database query: ${response.status}`, response.ok ? 'success' : 'error');
+                recordResult(response.ok);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const streams = Array.isArray(data) ? data : (data.streams || []);
+                    log(logId, `Streams in database: ${streams.length}`, 'success');
+
+                    streams.forEach(stream => {
+                        log(logId, `  📹 ${stream.name} (ID: ${stream.id}, Enabled: ${stream.enabled})`, 'info');
+                    });
+                    recordResult(streams.length > 0, streams.length === 0);
+                }
+
+                updateStatus('db-status', 'SUCCESS');
+            } catch (error) {
+                log(logId, `❌ Error: ${error.message}`, 'error');
+                updateStatus('db-status', 'ERROR');
+                recordResult(false);
+            }
+        }
+
+        async function testHLS() {
+            const logId = 'hls-log';
+            const videoEl = document.getElementById('hls-video');
+            document.getElementById(logId).innerHTML = '';
+            log(logId, '📹 Testing HLS stream...', 'info');
+
+            try {
+                // Get stream name
+                const streamsResponse = await fetch('/api/streams');
+                const streamsData = await streamsResponse.json();
+                const streams = Array.isArray(streamsData) ? streamsData : (streamsData.streams || []);
+
+                if (streams.length === 0) {
+                    log(logId, '⚠️ No streams configured', 'warning');
+                    updateStatus('hls-status', 'WARNING');
+                    recordResult(false, true);
+                    return;
+                }
+
+                const streamName = streams[0].name;
+                log(logId, `Testing stream: ${streamName}`, 'info');
+
+                const hlsUrl = `http://localhost:1984/api/stream.m3u8?src=${encodeURIComponent(streamName)}`;
+                log(logId, `HLS URL: ${hlsUrl}`, 'info');
+
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(hlsUrl);
+                    hls.attachMedia(videoEl);
+
+                    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                        log(logId, '✅ HLS manifest loaded successfully', 'success');
+                        recordResult(true);
+                        videoEl.play().then(() => {
+                            log(logId, '✅ Video playing', 'success');
+                            updateStatus('hls-status', 'SUCCESS');
+                        }).catch(err => {
+                            log(logId, `⚠️ Autoplay blocked: ${err.message}`, 'warning');
+                            updateStatus('hls-status', 'WARNING');
+                        });
+                    });
+
+                    hls.on(Hls.Events.ERROR, (event, data) => {
+                        if (data.fatal) {
+                            log(logId, `❌ HLS Error: ${data.type} - ${data.details}`, 'error');
+                            updateStatus('hls-status', 'ERROR');
+                            recordResult(false);
+                        }
+                    });
+                } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
+                    videoEl.src = hlsUrl;
+                    videoEl.addEventListener('loadedmetadata', () => {
+                        log(logId, '✅ Native HLS loaded', 'success');
+                        updateStatus('hls-status', 'SUCCESS');
+                        recordResult(true);
+                    });
+                } else {
+                    log(logId, '❌ HLS not supported', 'error');
+                    updateStatus('hls-status', 'ERROR');
+                    recordResult(false);
+                }
+            } catch (error) {
+                log(logId, `❌ Error: ${error.message}`, 'error');
+                updateStatus('hls-status', 'ERROR');
+                recordResult(false);
+            }
+        }
+
+        async function testPlayback() {
+            const logId = 'playback-log';
+            const videoEl = document.getElementById('playback-video');
+            document.getElementById(logId).innerHTML = '';
+            log(logId, '▶️ Testing playback...', 'info');
+
+            try {
+                const response = await fetch('/api/recordings');
+                log(logId, `Recordings API: ${response.status}`, response.ok ? 'success' : 'error');
+                recordResult(response.ok);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const recordings = data.recordings || [];
+                    log(logId, `Found ${recordings.length} recording(s)`, recordings.length > 0 ? 'success' : 'warning');
+                    recordResult(recordings.length > 0, recordings.length === 0);
+
+                    if (recordings.length > 0) {
+                        const firstRecording = recordings[0];
+                        log(logId, `Testing playback of recording ID: ${firstRecording.id}`, 'info');
+
+                        const playUrl = `/api/recordings/play/${firstRecording.id}`;
+                        videoEl.src = playUrl;
+
+                        videoEl.onloadedmetadata = () => {
+                            log(logId, '✅ Video metadata loaded', 'success');
+                            updateStatus('playback-status', 'SUCCESS');
+                        };
+
+                        videoEl.onerror = () => {
+                            log(logId, `❌ Video error: ${videoEl.error?.message}`, 'error');
+                            updateStatus('playback-status', 'ERROR');
+                            recordResult(false);
+                        };
+                    } else {
+                        updateStatus('playback-status', 'WARNING');
+                    }
+                }
+            } catch (error) {
+                log(logId, `❌ Error: ${error.message}`, 'error');
+                updateStatus('playback-status', 'ERROR');
+                recordResult(false);
+            }
+        }
+
+        async function testRecording() {
+            const logId = 'recording-log';
+            document.getElementById(logId).innerHTML = '';
+            log(logId, '⏺️ Testing recording system...', 'info');
+
+            try {
+                const response = await fetch('/api/recordings');
+                const data = await response.json();
+                const recordings = data.recordings || [];
+
+                log(logId, `Total recordings: ${recordings.length}`, 'success');
+                recordResult(true);
+
+                if (recordings.length > 0) {
+                    const latest = recordings[0];
+                    log(logId, `Latest: ${latest.file_path}`, 'info');
+                    // Size is already formatted by the API
+                    log(logId, `Size: ${latest.size}`, 'info');
+                    log(logId, `Duration: ${latest.duration}s`, 'info');
+
+                    // Check if recordings are recent
+                    const startTimeMs = Date.parse(latest.start_time);
+                    const recordingAge = (Date.now() - startTimeMs) / 1000;
+
+                    const isRecent = recordingAge < 300; // Within 5 minutes
+                    log(logId, `Recording age: ${Math.floor(recordingAge)}s`, isRecent ? 'success' : 'warning');
+                    recordResult(isRecent, !isRecent);
+                }
+
+                updateStatus('recording-status', 'SUCCESS');
+            } catch (error) {
+                log(logId, `❌ Error: ${error.message}`, 'error');
+                updateStatus('recording-status', 'ERROR');
+                recordResult(false);
+            }
+        }
+
+        async function testAuth() {
+            const logId = 'auth-log';
+            document.getElementById(logId).innerHTML = '';
+            log(logId, '🔐 Testing authentication...', 'info');
+
+            const auth = localStorage.getItem('auth');
+            if (auth) {
+                log(logId, '✅ Auth token found', 'success');
+                log(logId, `Token: ${auth.substring(0, 20)}...`, 'info');
+                recordResult(true);
+            } else {
+                log(logId, '⚠️ No auth token found', 'warning');
+                recordResult(false, true);
+            }
+
+            try {
+                const response = await fetch('/api/system/info');
+                log(logId, `Protected endpoint: ${response.status}`, response.ok ? 'success' : 'error');
+                recordResult(response.ok);
+                updateStatus('auth-status', response.ok ? 'SUCCESS' : 'ERROR');
+            } catch (error) {
+                log(logId, `❌ Error: ${error.message}`, 'error');
+                updateStatus('auth-status', 'ERROR');
+                recordResult(false);
+            }
+        }
+
+        async function testStorage() {
+            const logId = 'storage-log';
+            document.getElementById(logId).innerHTML = '';
+            log(logId, '💿 Testing storage system...', 'info');
+
+            try {
+                const response = await fetch('/api/system/info');
+                const data = await response.json();
+
+                if (data.disk) {
+                    const usedGB = (data.disk.used / 1024 / 1024 / 1024).toFixed(2);
+                    const totalGB = (data.disk.total / 1024 / 1024 / 1024).toFixed(2);
+                    const usedPercent = ((data.disk.used / data.disk.total) * 100).toFixed(1);
+
+                    log(logId, `Used: ${usedGB} GB / ${totalGB} GB (${usedPercent}%)`, 'success');
+                    recordResult(true);
+
+                    const isHealthy = usedPercent < 90;
+                    log(logId, `Storage health: ${isHealthy ? 'Good' : 'Warning'}`, isHealthy ? 'success' : 'warning');
+                    recordResult(isHealthy, !isHealthy);
+
+                    updateStatus('storage-status', isHealthy ? 'SUCCESS' : 'WARNING');
+                } else {
+                    log(logId, '⚠️ No storage info available', 'warning');
+                    updateStatus('storage-status', 'WARNING');
+                    recordResult(false, true);
+                }
+            } catch (error) {
+                log(logId, `❌ Error: ${error.message}`, 'error');
+                updateStatus('storage-status', 'ERROR');
+                recordResult(false);
+            }
+        }
+
+        async function testNetwork() {
+            const logId = 'network-log';
+            document.getElementById(logId).innerHTML = '';
+            log(logId, '🌍 Testing network connectivity...', 'info');
+
+            try {
+                // Test localhost
+                const start = Date.now();
+                await fetch('/api/system/info');
+                const latency = Date.now() - start;
+                log(logId, `Localhost latency: ${latency}ms`, latency < 100 ? 'success' : 'warning');
+                recordResult(latency < 100, latency >= 100);
+
+                // Test go2rtc
+                const go2rtcStart = Date.now();
+                await fetch('http://localhost:1984/api/streams');
+                const go2rtcLatency = Date.now() - go2rtcStart;
+                log(logId, `go2rtc latency: ${go2rtcLatency}ms`, go2rtcLatency < 100 ? 'success' : 'warning');
+                recordResult(go2rtcLatency < 100, go2rtcLatency >= 100);
+
+                updateStatus('network-status', 'SUCCESS');
+            } catch (error) {
+                log(logId, `❌ Error: ${error.message}`, 'error');
+                updateStatus('network-status', 'ERROR');
+                recordResult(false);
+            }
+        }
+
+        async function runAllTests() {
+            testResults = { total: 0, passed: 0, failed: 0, warnings: 0 };
+            updateSummary();
+
+            await testAuth();
+            await testBackend();
+            await testAPIs();
+            await testGo2RTC();
+            await testDatabase();
+            await testRecording();
+            await testStorage();
+            await testNetwork();
+            await testHLS();
+            await testPlayback();
+
+            alert(`Tests Complete!\nPassed: ${testResults.passed}\nFailed: ${testResults.failed}\nWarnings: ${testResults.warnings}`);
+        }
+
+        function clearAllLogs() {
+            document.querySelectorAll('.log').forEach(el => el.innerHTML = '');
+            testResults = { total: 0, passed: 0, failed: 0, warnings: 0 };
+            updateSummary();
+        }
+
+        function exportReport() {
+            const report = {
+                timestamp: new Date().toISOString(),
+                results: testResults,
+                logs: {}
+            };
+
+            document.querySelectorAll('.log').forEach(el => {
+                report.logs[el.id] = el.innerText;
+            });
+
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `lightnvr-diagnostic-${Date.now()}.json`;
+            a.click();
+        }
+
+        // Auto-run auth test on load
+        window.addEventListener('load', () => {
+            testAuth();
+        });
+    </script>
+</body>
+
+</html>

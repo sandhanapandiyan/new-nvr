@@ -1,46 +1,10 @@
-# Build directories
-/build/
-/bin/
-/lib/
-/obj/
-
-# Sub-project
-light-object-detect/
-
-# Test Artifacts
-web/screenshots
-
-# Generated files
-cmake-build-debug/
-
-# Compiled Object files
+# Build artifacts
+build/
 *.o
-*.obj
-*.lo
-*.slo
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
+*.a
 *.so
 *.dylib
-*.dll
-
-# Compiled Static libraries
-*.a
-*.la
-*.lai
-*.lib
-
-# Executables
 *.exe
-*.out
-*.app
-/lightnvr
-
-# CMake generated files
 CMakeCache.txt
 CMakeFiles/
 cmake_install.cmake
@@ -48,7 +12,39 @@ Makefile
 *.cmake
 !CMakeLists.txt
 
-# IDE files
+# Compiled binaries
+bin/
+lightnvr
+rtsp_recorder
+
+# Local runtime data
+local/
+*.pid
+
+# Logs
+*.log
+logs/
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+*.bak
+
+# Recordings and exports
+recordings/
+export/
+*.mp4
+*.mkv
+*.avi
+
+# Node modules and package locks
+node_modules/
+package-lock.json
+web/node_modules/
+web/dist/
+
+# IDE and editor files
 .vscode/
 .idea/
 *.swp
@@ -56,42 +52,60 @@ Makefile
 *~
 .DS_Store
 
-# Dependency directories
-/deps/
+# Temporary files
+*.tmp
+tmp/
+temp/
+.cache/
 
-# Log files
-*.log
+# AI tool directories
+.zencoder/
+.zenflow/
 
-# Database files
-*.db
-*.sqlite
-*.sqlite3
+# Configuration that might contain secrets
+*.ini
+*.conf
+!lightnvr.conf.example
 
-# Configuration files with sensitive information
-# Keep the default config but ignore user configs
-/lightnvr.conf
-/config/lightnvr.conf
+# Test and development files
+test_*.sh
+stress_test.sh
+splitter*.py
+*_test.c
+*_standalone.c
 
-# Recording files
-/recordings/
+# go2rtc
+go2rtc/go2rtc
+go2rtc/*.log
 
-# Swap files
-/swap
+# External dependencies
+external/*/build/
+external/*/lib/
 
-# Models
-/models
-*.so*
+# Backup files
+*~
+*.bak
+*.backup
 
-# External Dependencies
-/external
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+ENV/
 
-# node modules
-node_modules/
-web/node_modules/
+# Coverage reports
+*.gcov
+*.gcda
+*.gcno
 
-# Web build artifacts (built during CI/CD, not checked in)
-web/dist/
+# Memory dumps
+core
+*.core
 
-# Playwright test artifacts
-playwright-report/
-test-results/
+# Documentation generation
+docs/generated/
+*.dvi
+*.aux

@@ -180,15 +180,22 @@ static char *create_onvif_request(const char *username, const char *password, co
     memcpy(digest_raw + digest_len, password, strlen(password));
     digest_len += strlen(password);
 
-    // Generate SHA-1 hash
+    // Generate SHA-1 hash using modern mbedtls API
     unsigned char hash[20]; // SHA-1 produces 20 bytes
-    mbedtls_sha1_context sha1_ctx;
 
-    mbedtls_sha1_init(&sha1_ctx);
-    mbedtls_sha1_starts(&sha1_ctx);
-    mbedtls_sha1_update(&sha1_ctx, digest_raw, digest_len);
-    mbedtls_sha1_finish(&sha1_ctx, hash);
-    mbedtls_sha1_free(&sha1_ctx);
+    #if defined(MBEDTLS_SHA1_C)
+    mbedtls_sha1(digest_raw, digest_len, hash);
+    #else
+    // Fallback to MD API if SHA1 is not available
+    mbedtls_md_context_t md_ctx;
+    const mbedtls_md_info_t *md_info = mbedtls_md_info_from_type(MBEDTLS_MD_SHA1);
+    mbedtls_md_init(&md_ctx);
+    mbedtls_md_setup(&md_ctx, md_info, 0);
+    mbedtls_md_starts(&md_ctx);
+    mbedtls_md_update(&md_ctx, digest_raw, digest_len);
+    mbedtls_md_finish(&md_ctx, hash);
+    mbedtls_md_free(&md_ctx);
+    #endif
 
     // Encode hash as base64
     char *digest = base64_encode(hash, 20); // SHA-1 hash is 20 bytes

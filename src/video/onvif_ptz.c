@@ -65,7 +65,19 @@ static char* create_security_header(const char *username, const char *password, 
     memcpy(concatenated + nonce_len, created, strlen(created));
     memcpy(concatenated + nonce_len + strlen(created), password, strlen(password) + 1);
     
+    // Calculate SHA1 digest using modern API
+    #if defined(MBEDTLS_SHA1_C)
     mbedtls_sha1((unsigned char*)concatenated, nonce_len + strlen(created) + strlen(password), digest);
+    #else
+    mbedtls_md_context_t md_ctx;
+    const mbedtls_md_info_t *md_info = mbedtls_md_info_from_type(MBEDTLS_MD_SHA1);
+    mbedtls_md_init(&md_ctx);
+    mbedtls_md_setup(&md_ctx, md_info, 0);
+    mbedtls_md_starts(&md_ctx);
+    mbedtls_md_update(&md_ctx, (unsigned char*)concatenated, nonce_len + strlen(created) + strlen(password));
+    mbedtls_md_finish(&md_ctx, digest);
+    mbedtls_md_free(&md_ctx);
+    #endif
 
     base64_digest = malloc(((4 * 20) / 3) + 5);
     mbedtls_base64_encode((unsigned char*)base64_digest, ((4 * 20) / 3) + 5, &base64_len, digest, 20);

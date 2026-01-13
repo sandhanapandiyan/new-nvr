@@ -226,7 +226,7 @@ void mg_handle_go2rtc_webrtc_offer_worker(struct mg_connection *c, struct mg_htt
     }
 
     // Set content type header only, let curl handle Content-Length
-    headers = curl_slist_append(headers, "Content-Type: application/json");
+    headers = curl_slist_append(headers, "Content-Type: application/sdp");
 
     if (!headers) {
         log_error("Failed to create headers list");
@@ -261,7 +261,7 @@ void mg_handle_go2rtc_webrtc_offer_worker(struct mg_connection *c, struct mg_htt
 
         // Set CORS headers and send the response
         mg_http_reply(c, 200,
-                     "Content-Type: application/json\r\n"
+                     "Content-Type: application/sdp\r\n"
                      "Access-Control-Allow-Origin: *\r\n"
                      "Access-Control-Allow-Methods: POST, OPTIONS\r\n"
                      "Access-Control-Allow-Headers: Content-Type, Authorization, Origin, X-Requested-With, Accept\r\n"

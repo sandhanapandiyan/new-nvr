@@ -1248,8 +1248,14 @@ void *hls_unified_thread_func(void *arg) {
                         log_info("Stream %d: Video stream detected (codec: %d, width: %d, height: %d)",
                                 i, codecpar->codec_id, codecpar->width, codecpar->height);
                     } else if (codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
+                        int nb_channels = 0;
+                        #ifdef FF_API_CH_LAYOUT
+                        nb_channels = codecpar->ch_layout.nb_channels;
+                        #else
+                        nb_channels = av_get_channel_layout_nb_channels(codecpar->channel_layout);
+                        #endif
                         log_info("Stream %d: Audio stream detected (codec: %d, channels: %d, sample_rate: %d)",
-                                i, codecpar->codec_id, codecpar->ch_layout.nb_channels, codecpar->sample_rate);
+                                i, codecpar->codec_id, nb_channels, codecpar->sample_rate);
                     } else {
                         log_info("Stream %d: Other stream type detected (codec_type: %d)",
                                 i, codecpar->codec_type);
@@ -1646,8 +1652,14 @@ void *hls_unified_thread_func(void *arg) {
                         log_info("Stream %d: Video stream detected (codec: %d, width: %d, height: %d)",
                                 i, codecpar->codec_id, codecpar->width, codecpar->height);
                     } else if (codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
+                        int nb_channels = 0;
+                        #ifdef FF_API_CH_LAYOUT
+                        nb_channels = codecpar->ch_layout.nb_channels;
+                        #else
+                        nb_channels = av_get_channel_layout_nb_channels(codecpar->channel_layout);
+                        #endif
                         log_info("Stream %d: Audio stream detected (codec: %d, channels: %d, sample_rate: %d)",
-                                i, codecpar->codec_id, codecpar->ch_layout.nb_channels, codecpar->sample_rate);
+                                i, codecpar->codec_id, nb_channels, codecpar->sample_rate);
                     } else {
                         log_info("Stream %d: Other stream type detected (codec_type: %d)",
                                 i, codecpar->codec_type);

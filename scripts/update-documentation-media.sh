@@ -38,16 +38,12 @@ while [[ $# -gt 0 ]]; do
       LIGHTNVR_URL="http://localhost:8080"
       shift
       ;;
-    --docker)
-      USE_DOCKER=true
-      shift
-      ;;
     --url)
       LIGHTNVR_URL="$2"
       shift 2
       ;;
     --screenshots-only)
-      SCREENSHOTS_ONLY=true
+      SCREENSHOT_ONLY=true
       shift
       ;;
     --videos-only)
@@ -82,7 +78,7 @@ echo "Configuration:"
 echo "  URL: $LIGHTNVR_URL"
 echo "  Username: $USERNAME"
 echo "  Screenshots: $([ "$VIDEOS_ONLY" = true ] && echo "No" || echo "Yes")"
-echo "  Videos: $([ "$SCREENSHOTS_ONLY" = true ] && echo "No" || echo "Yes")"
+echo "  Videos: $([ "$SCREENSHOT_ONLY" = true ] && echo "No" || echo "Yes")"
 echo "  All Themes: $ALL_THEMES"
 echo ""
 
@@ -104,34 +100,6 @@ if [ "$SKIP_INSTALL" = false ]; then
   npx playwright install chromium
 
   echo -e "${GREEN}✓ Dependencies installed${NC}"
-  echo ""
-fi
-
-# Start Docker if requested
-if [ "$USE_DOCKER" = true ]; then
-  echo -e "${YELLOW}Starting LightNVR in Docker...${NC}"
-  docker-compose up -d
-  
-  echo "Waiting for LightNVR to start..."
-  sleep 15
-  
-  # Wait for LightNVR to be ready
-  MAX_RETRIES=30
-  RETRY_COUNT=0
-  while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
-    if curl -s -o /dev/null -w "%{http_code}" "$LIGHTNVR_URL/login.html" | grep -q "200"; then
-      echo -e "${GREEN}✓ LightNVR is ready${NC}"
-      break
-    fi
-    RETRY_COUNT=$((RETRY_COUNT + 1))
-    echo "Waiting... ($RETRY_COUNT/$MAX_RETRIES)"
-    sleep 2
-  done
-  
-  if [ $RETRY_COUNT -eq $MAX_RETRIES ]; then
-    echo -e "${RED}Error: LightNVR did not start in time${NC}"
-    exit 1
-  fi
   echo ""
 fi
 
@@ -256,11 +224,4 @@ echo "  1. Review the captured media in docs/images/ and docs/videos/"
 echo "  2. Update README.md to reference new screenshots/videos"
 echo "  3. Commit changes: git add docs/ && git commit -m 'docs: update screenshots and videos'"
 echo ""
-
-# Cleanup Docker if we started it
-if [ "$USE_DOCKER" = true ]; then
-  echo -e "${YELLOW}Stopping Docker containers...${NC}"
-  docker-compose down
-  echo -e "${GREEN}✓ Docker containers stopped${NC}"
-fi
 

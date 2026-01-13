@@ -6,8 +6,8 @@ This document provides detailed instructions for installing LightNVR on various 
 
 1. [Prerequisites](#prerequisites)
 2. [Installation Methods](#installation-methods)
+   - [Standalone Run Script (Recommended)](#standalone-run-script-recommended)
    - [Building from Source](#building-from-source)
-   - [Docker Installation](#docker-installation)
    - [Pre-built Packages](#pre-built-packages)
 3. [Platform-Specific Instructions](#platform-specific-instructions)
    - [Debian/Ubuntu](#debianubuntu)
@@ -77,88 +77,20 @@ sudo ./scripts/install.sh --prefix=/opt --config-dir=/etc/custom/lightnvr
 
 See `./scripts/install.sh --help` for all available options.
 
-### Docker Installation
+### Standalone Run Script (Recommended)
 
-Docker provides an easy way to run LightNVR without installing dependencies directly on your system.
-
-#### Option 1: Using Docker Compose (Recommended)
-
-Docker Compose simplifies the deployment and ensures proper volume configuration.
+The easiest way to get LightNVR running without system-wide installation is using the unified `run.sh` script.
 
 ```bash
-# Clone the repository
-git clone https://github.com/opensensor/lightNVR.git
-cd lightNVR
+# Clone and enter the repository
+git clone https://github.com/opensensor/lightnvr.git
+cd lightnvr
 
-# Start the container
-docker-compose up -d
+# Run the software
+./run.sh
 ```
 
-The default `docker-compose.yml` creates two volumes:
-- `./config` - Configuration files (mounted to `/etc/lightnvr`)
-- `./data` - Persistent data including database, recordings, and models (mounted to `/var/lib/lightnvr/data`)
-
-To customize the configuration:
-
-```bash
-# Edit the configuration file
-nano config/lightnvr.ini
-
-# Restart the container to apply changes
-docker-compose restart
-```
-
-#### Option 2: Using Docker Run
-
-##### 1. Pull the Docker Image
-
-```bash
-docker pull lightnvr/lightnvr:latest
-```
-
-##### 2. Create Directories for Persistent Storage
-
-```bash
-mkdir -p /path/to/config
-mkdir -p /path/to/data
-```
-
-**Important:** The data directory must be persisted to avoid losing the database and recordings on container restart.
-
-##### 3. Run the Container
-
-```bash
-docker run -d \
-  --name lightnvr \
-  --restart unless-stopped \
-  -p 8080:8080 \
-  -p 1984:1984 \
-  -v /path/to/config:/etc/lightnvr \
-  -v /path/to/data:/var/lib/lightnvr/data \
-  lightnvr/lightnvr:latest
-```
-
-##### 4. Create a Configuration File
-
-```bash
-# Copy the default configuration
-docker cp lightnvr:/etc/lightnvr/lightnvr.ini /path/to/config/lightnvr.ini
-
-# Edit the configuration
-nano /path/to/config/lightnvr.ini
-```
-
-**Note:** Ensure the paths in `lightnvr.ini` point to `/var/lib/lightnvr/data` subdirectories:
-- Database: `/var/lib/lightnvr/data/database/lightnvr.db`
-- Recordings: `/var/lib/lightnvr/data/recordings`
-- MP4 recordings: `/var/lib/lightnvr/data/recordings/mp4`
-- Models: `/var/lib/lightnvr/data/models`
-
-##### 5. Restart the Container
-
-```bash
-docker restart lightnvr
-```
+This script handles dependency checks, building the backend and frontend, downloading `go2rtc`, and starting the system with a local configuration.
 
 ### Pre-built Packages
 
@@ -425,45 +357,6 @@ sudo ./scripts/install.sh
 sudo systemctl start lightnvr
 ```
 
-### Upgrading Docker Installation
-
-#### Using Docker Compose
-
-```bash
-# Navigate to the repository
-cd lightNVR
-
-# Pull the latest changes
-git pull
-
-# Rebuild and restart
-docker-compose down
-docker-compose build
-docker-compose up -d
-```
-
-#### Using Docker Run
-
-```bash
-# Pull the latest image
-docker pull lightnvr/lightnvr:latest
-
-# Stop and remove the container
-docker stop lightnvr
-docker rm lightnvr
-
-# Run a new container with the latest image
-docker run -d \
-  --name lightnvr \
-  --restart unless-stopped \
-  -p 8080:8080 \
-  -p 1984:1984 \
-  -v /path/to/config:/etc/lightnvr \
-  -v /path/to/data:/var/lib/lightnvr/data \
-  lightnvr/lightnvr:latest
-```
-
-**Note:** Your data is preserved in the volumes, so upgrading will not affect your database or recordings.
 
 ## Uninstallation
 
@@ -487,36 +380,3 @@ sudo rm -rf /var/lib/lightnvr
 sudo rm -rf /var/log/lightnvr
 ```
 
-### Uninstalling Docker Installation
-
-#### Using Docker Compose
-
-```bash
-# Navigate to the repository
-cd lightNVR
-
-# Stop and remove the container
-docker-compose down
-
-# Remove the image
-docker rmi lightnvr
-
-# Remove volumes (optional - this will delete all data)
-rm -rf ./config
-rm -rf ./data
-```
-
-#### Using Docker Run
-
-```bash
-# Stop and remove the container
-docker stop lightnvr
-docker rm lightnvr
-
-# Remove the image
-docker rmi lightnvr/lightnvr:latest
-
-# Remove volumes (optional - this will delete all data)
-rm -rf /path/to/config
-rm -rf /path/to/data
-```

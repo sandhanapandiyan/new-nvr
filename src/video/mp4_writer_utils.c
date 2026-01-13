@@ -378,8 +378,8 @@ int transcode_audio_packet(const char *stream_name,
         return ret;
     }
 
-    // Set output packet time base to match the encoder's time base
-    out_pkt->time_base = audio_transcoders[transcoder_idx].encoder_ctx->time_base;
+    // Note: time_base field in AVPacket is not available in FFmpeg 4.x
+    // The encoder's time base is already used during encoding
 
     // Set output packet stream index to match the input packet
     out_pkt->stream_index = in_pkt->stream_index;

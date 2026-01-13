@@ -16,10 +16,14 @@
   "dependencies": {
     "@preact-signals/query": "^2.1.1",
     "@preact/compat": "^17.x",
+    "@preact/signals": "^2.5.1",
+    "@preact/signals-react": "^3.6.1",
+    "date-fns": "^4.1.0",
     "hls.js": "^1.6.0",
     "htm": "^3.1.1",
     "preact": "^10.15.1",
     "tailwindcss": "^3.3.3",
+    "terser": "^5.44.1",
     "webrtc-adapter": "^9.0.3"
   },
   "devDependencies": {

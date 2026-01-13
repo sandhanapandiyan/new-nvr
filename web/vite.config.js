@@ -75,7 +75,7 @@ export default defineConfig({
         // Add all HTML files as entry points
         index: resolve(__dirname, 'index.html'),
         login: resolve(__dirname, 'login.html'),
-        recordings: resolve(__dirname, 'recordings.html'),
+
         settings: resolve(__dirname, 'settings.html'),
         streams: resolve(__dirname, 'streams.html'),
 
@@ -83,6 +83,10 @@ export default defineConfig({
         timeline: resolve(__dirname, 'timeline.html'),
         users: resolve(__dirname, 'users.html'),
         hls: resolve(__dirname, 'hls.html'),
+
+        // PRO NVR Pages
+        'pro-index': resolve(__dirname, 'pro-index.html'),
+        'pro-playback': resolve(__dirname, 'pro-playback.html'),
       },
       output: {
         // Ensure CSS files are properly named and placed
@@ -124,14 +128,14 @@ export default defineConfig({
       transformIndexHtml(html) {
         // Replace dist/js/ references with ./js/ for Vite to process them
         return html
-            .replace(/src="dist\/js\//g, 'src="./js/')
-            .replace(/href="dist\/css\//g, 'href="./css/')
-            .replace(/src="dist\/img\//g, 'src="./img/')
-            .replace(/href="dist\/img\//g, 'href="./img/')
-            .replace(/src="dist\/fonts\//g, 'src="./fonts/')
-            .replace(/href="dist\/fonts\//g, 'href="./fonts/')
-            // Also handle direct CSS references without dist/ prefix
-            .replace(/href="css\//g, 'href="./css/');
+          .replace(/src="dist\/js\//g, 'src="./js/')
+          .replace(/href="dist\/css\//g, 'href="./css/')
+          .replace(/src="dist\/img\//g, 'src="./img/')
+          .replace(/href="dist\/img\//g, 'href="./img/')
+          .replace(/src="dist\/fonts\//g, 'src="./fonts/')
+          .replace(/href="dist\/fonts\//g, 'href="./fonts/')
+          // Also handle direct CSS references without dist/ prefix
+          .replace(/href="css\//g, 'href="./css/');
       }
     },
     {
@@ -162,8 +166,8 @@ export default defineConfig({
           for (const file of cssFiles) {
             if (file.endsWith('.css')) {
               await fs.copyFile(
-                  path.join('css', file),
-                  path.join('dist/css', file)
+                path.join('css', file),
+                path.join('dist/css', file)
               );
               console.log(`Copied ${file} to dist/css/`);
             }

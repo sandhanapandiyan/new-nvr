@@ -305,6 +305,6 @@ fi
 
 # Create a symbolic link to the binary in the project root
 if [ -f "$BUILD_DIR/bin/lightnvr" ]; then
-    ln -sf "$BUILD_DIR/bin/lightnvr" lightnvr
-    echo "Created symbolic link: lightnvr -> $BUILD_DIR/bin/lightnvr"
+    ln -sf "$BUILD_DIR/bin/lightnvr" lightnvr-app
+    echo "Created symbolic link: lightnvr-app -> $BUILD_DIR/bin/lightnvr"
 fi

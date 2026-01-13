@@ -6,10 +6,17 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <title>WebRTC View - LightNVR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      body { background-color: #03070c; font-family: 'Inter', sans-serif; }
+    </style>
     <!-- Theme initialization script - runs before page render to prevent FOUC -->
     <script>
     (function() {
       try {
+        document.documentElement.classList.add('dark');
         const COLOR_THEMES = {"default":{"name":"Default","light":{"hue":240,"saturation":5.9},"dark":{"hue":240,"saturation":3.7},"icon":"🎨"},"blue":{"name":"Ocean Blue","light":{"hue":217,"saturation":32},"dark":{"hue":217,"saturation":25},"icon":"🌊"},"emerald":{"name":"Forest Green","light":{"hue":160,"saturation":30},"dark":{"hue":160,"saturation":25},"icon":"🌲"},"purple":{"name":"Royal Purple","light":{"hue":265,"saturation":28},"dark":{"hue":265,"saturation":20},"icon":"👑"},"rose":{"name":"Sunset Rose","light":{"hue":350,"saturation":25},"dark":{"hue":350,"saturation":18},"icon":"🌹"},"amber":{"name":"Golden Amber","light":{"hue":45,"saturation":28},"dark":{"hue":45,"saturation":20},"icon":"⚡"},"slate":{"name":"Cool Slate","light":{"hue":215,"saturation":8},"dark":{"hue":215,"saturation":6},"icon":"🗿"}};
         const savedTheme = localStorage.getItem('lightnvr-theme');
         const savedColorIntensity = localStorage.getItem('lightnvr-color-intensity');

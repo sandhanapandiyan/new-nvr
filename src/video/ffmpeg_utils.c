@@ -212,10 +212,15 @@ void comprehensive_ffmpeg_cleanup(AVFormatContext **input_ctx, AVCodecContext **
                             }
 
                             // Clear any other fields that might have allocated memory
+                            // Note: ch_layout is only available in FFmpeg 5.1+, use channel_layout for older versions
+                            #ifdef FF_API_CH_LAYOUT
                             codecpar->ch_layout.u.mask = 0;
                             if (codecpar->ch_layout.nb_channels > 0) {
                                 codecpar->ch_layout.nb_channels = 0;
                             }
+                            #else
+                            codecpar->channel_layout = 0;
+                            #endif
 
                             // ENHANCED FIX: Create a temporary codec context to force cleanup of internal allocations
                             // This is a workaround for FFmpeg's internal memory management issues

@@ -6,8 +6,8 @@
 import { render } from 'preact';
 import { UsersView } from '../components/preact/UsersView.jsx';
 import { QueryClientProvider, queryClient } from '../query-client.js';
-import {Header} from "../components/preact/Header.jsx";
-import {Footer} from "../components/preact/Footer.jsx";
+import { Header } from "../components/preact/Header.jsx";
+import { Footer } from "../components/preact/Footer.jsx";
 import { ToastContainer } from "../components/preact/ToastContainer.jsx";
 import { setupSessionValidation } from '../utils/auth-utils.js';
 
@@ -22,10 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (container) {
     render(
       <QueryClientProvider client={queryClient}>
-        <Header />
         <ToastContainer />
         <UsersView />
-        <Footer />
       </QueryClientProvider>,
       container
     );

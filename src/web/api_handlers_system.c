@@ -85,6 +85,18 @@ void mg_handle_get_system_info(struct mg_connection *c, struct mg_http_message *
             }
             cJSON_AddNumberToObject(cpu, "usage", cpu_usage);
 
+            // Get CPU temperature
+            double cpu_temp = 0.0;
+            FILE *temp_fp = fopen("/sys/class/thermal/thermal_zone0/temp", "r");
+            if (temp_fp) {
+                long temp_raw;
+                if (fscanf(temp_fp, "%ld", &temp_raw) == 1) {
+                    cpu_temp = (double)temp_raw / 1000.0;
+                }
+                fclose(temp_fp);
+            }
+            cJSON_AddNumberToObject(cpu, "temperature", cpu_temp);
+
             // Add CPU object to info
             cJSON_AddItemToObject(info, "cpu", cpu);
         }
@@ -249,6 +261,8 @@ void mg_handle_get_system_info(struct mg_connection *c, struct mg_http_message *
             cJSON_AddNumberToObject(disk, "total", total);
             cJSON_AddNumberToObject(disk, "used", used);
             cJSON_AddNumberToObject(disk, "free", free);
+            cJSON_AddNumberToObject(disk, "max_size", g_config.max_storage_size);
+            cJSON_AddBoolToObject(disk, "auto_delete_oldest", g_config.auto_delete_oldest);
 
             // Add disk object to info
             cJSON_AddItemToObject(info, "disk", disk);

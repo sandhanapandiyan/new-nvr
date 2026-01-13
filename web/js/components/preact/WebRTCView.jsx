@@ -382,18 +382,6 @@ export function WebRTCView() {
       <div className="page-header flex justify-between items-center mb-4 p-4 bg-card text-card-foreground rounded-lg shadow" style={{ position: 'relative', zIndex: 10, pointerEvents: 'auto' }}>
         <div className="flex items-center space-x-2">
           <h2 className="text-xl font-bold mr-4">Live View</h2>
-          <div className="flex space-x-2">
-            <button
-              id="hls-toggle-btn"
-              className="btn-success focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 inline-block text-center"
-              style={{ position: 'relative', zIndex: 50 }} // Very high z-index to ensure clickability
-              onClick={() => {
-                window.location.href = '/hls.html';
-              }}
-            >
-              HLS View
-            </button>
-          </div>
         </div>
         <div className="controls flex items-center space-x-2">
           <div className="flex items-center">
@@ -443,7 +431,7 @@ export function WebRTCView() {
             title="Toggle Fullscreen"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path
                 d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
             </svg>
@@ -457,8 +445,8 @@ export function WebRTCView() {
           className={`video-container layout-${layout}`}
         >
           {isLoadingStreams ? (
-              <div className="flex justify-center items-center col-span-full row-span-full h-64 w-full" style={{ pointerEvents: 'none', zIndex: 1 }}>
-                <div className="flex flex-col items-center justify-center py-8">
+            <div className="flex justify-center items-center col-span-full row-span-full h-64 w-full" style={{ pointerEvents: 'none', zIndex: 1 }}>
+              <div className="flex flex-col items-center justify-center py-8">
                 <div
                   className="inline-block animate-spin rounded-full border-4 border-input border-t-blue-600 dark:border-t-blue-500 w-16 h-16"></div>
                 <p className="mt-4 text-gray-700 dark:text-gray-300">Loading streams...</p>
@@ -466,12 +454,12 @@ export function WebRTCView() {
             </div>
           ) : (isLoading && !isLoadingStreams) ? (
             <div
-                className="flex justify-center items-center col-span-full row-span-full h-64 w-full"
-                style={{
-                  pointerEvents: 'none',
-                  position: 'relative',
-                  zIndex: 1
-                }}
+              className="flex justify-center items-center col-span-full row-span-full h-64 w-full"
+              style={{
+                pointerEvents: 'none',
+                position: 'relative',
+                zIndex: 1
+              }}
             >
               <div className="flex flex-col items-center justify-center py-8">
                 <div
