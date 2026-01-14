@@ -88,7 +88,7 @@ xset s noblank
 unclutter -idle 3 &
 
 # Kill any existing Chromium instances
-pkill -f chromium-browser || true
+pkill -f chromium || true
 sleep 2
 
 # Launch Chromium in kiosk mode
