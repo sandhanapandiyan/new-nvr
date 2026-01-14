@@ -8,6 +8,7 @@ import { h } from 'preact';
 import { useState, useEffect, useRef, useCallback } from 'preact/hooks';
 import { DetectionOverlay, takeSnapshotWithDetections } from './DetectionOverlay.jsx';
 import { SnapshotButton } from './SnapshotManager.jsx';
+import { PTZControlPanel } from './PTZControlPanel.jsx';
 import { LoadingIndicator } from './LoadingIndicator.jsx';
 import { showSnapshotPreview } from './UI.jsx';
 import { PTZControls } from './PTZControls.jsx';
@@ -800,6 +801,18 @@ export function WebRTCVideoCell({
               </button>
             )}
 
+            {stream.ptz_enabled && isPlaying && (
+              <button
+                onClick={() => setShowPTZControls(true)}
+                className="p-2 rounded-xl transition-all border bg-white/5 border-white/10 text-gray-400 hover:text-white hover:bg-white/10"
+                title="PTZ Controls"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </button>
+            )}
+
             <div className="flex items-center space-x-2 bg-green-500/10 px-3 py-1.5 rounded-full border border-green-500/20">
               <span className={`w-1.5 h-1.5 rounded-full ${isPlaying ? 'bg-green-500 animate-pulse' : 'bg-gray-500'}`}></span>
               <span className="text-[9px] font-black text-green-400 uppercase tracking-widest">{isPlaying ? 'Active' : 'Offline'}</span>
@@ -817,6 +830,14 @@ export function WebRTCVideoCell({
           )}
         </div>
       </div>
+
+      {/* PTZ Control Panel */}
+      {showPTZControls && stream.ptz_enabled && (
+        <PTZControlPanel
+          streamName={stream.name}
+          onClose={() => setShowPTZControls(false)}
+        />
+      )}
     </div>
   );
 }

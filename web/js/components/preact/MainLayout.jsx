@@ -4,6 +4,8 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 import { Sidebar } from './Sidebar.jsx';
+import { NotificationSystem } from './NotificationSystem.jsx';
+import { OnScreenKeyboard } from './OnScreenKeyboard.jsx';
 
 export function MainLayout({ children, activeNav, title, subtitle }) {
     const [currentTime, setCurrentTime] = useState(new Date());
@@ -58,6 +60,12 @@ export function MainLayout({ children, activeNav, title, subtitle }) {
                     {children}
                 </main>
             </div>
+
+            {/* Global Notification System */}
+            <NotificationSystem />
+
+            {/* On-Screen Keyboard for Touchscreen */}
+            <OnScreenKeyboard />
         </div>
     );
 }

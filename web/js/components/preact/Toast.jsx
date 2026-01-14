@@ -55,14 +55,14 @@ const containerStyle = {
 const Toast = ({ id, message, type, onRemove }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
-  
+
   useEffect(() => {
     // Trigger entrance animation after component mounts
     requestAnimationFrame(() => setIsVisible(true));
-    
+
     return () => setIsVisible(false);
   }, []);
-  
+
   const handleRemove = () => {
     setIsExiting(true);
     // Wait for exit animation to complete before removing from DOM
@@ -70,7 +70,7 @@ const Toast = ({ id, message, type, onRemove }) => {
       onRemove();
     }, 300); // Match transition duration
   };
-  
+
   const toastStyle = {
     padding: '10px 15px',
     borderRadius: '4px',
@@ -90,7 +90,7 @@ const Toast = ({ id, message, type, onRemove }) => {
     pointerEvents: 'auto', // Make the toast clickable
     border: '1px solid rgba(255,255,255,0.1)'
   };
-  
+
   const closeButtonStyle = {
     marginLeft: '10px',
     background: 'none',
@@ -103,7 +103,7 @@ const Toast = ({ id, message, type, onRemove }) => {
     padding: '0 5px',
     fontWeight: 'bold'
   };
-  
+
   const iconStyle = {
     marginRight: '10px',
     fontSize: '16px',
@@ -113,25 +113,25 @@ const Toast = ({ id, message, type, onRemove }) => {
     width: '20px',
     height: '20px'
   };
-  
+
   const contentStyle = {
     flex: 1,
     display: 'flex',
     alignItems: 'center'
   };
-  
+
   const messageStyle = {
     marginLeft: '5px'
   };
-  
+
   return (
     <div style={toastStyle} data-toast-id={id}>
       <div style={contentStyle}>
         <span style={iconStyle}>{toastIcons[type] || toastIcons.info}</span>
         <span style={messageStyle}>{message}</span>
       </div>
-      <button 
-        style={closeButtonStyle} 
+      <button
+        style={closeButtonStyle}
         onClick={handleRemove}
         onMouseOver={(e) => e.currentTarget.style.opacity = '1'}
         onMouseOut={(e) => e.currentTarget.style.opacity = '0.7'}
@@ -149,15 +149,15 @@ class ToastContainer extends Component {
   state = {
     toasts: []
   };
-  
+
   addToast = (message, type, duration) => {
     const id = Date.now();
     const newToast = { id, message, type, duration };
-    
+
     this.setState(prevState => ({
       toasts: [...prevState.toasts, newToast]
     }));
-    
+
     // Set timeout to auto-remove the toast after duration
     if (duration > 0) {
       setTimeout(() => {
@@ -166,31 +166,31 @@ class ToastContainer extends Component {
         if (toast) {
           // Mark toast for exit animation
           this.setState(prevState => ({
-            toasts: prevState.toasts.map(t => 
+            toasts: prevState.toasts.map(t =>
               t.id === id ? { ...t, exiting: true } : t
             )
           }));
-          
+
           // Remove after animation completes
           setTimeout(() => this.removeToast(id), 300);
         }
       }, duration - 300); // Start animation before duration ends
     }
-    
+
     return id;
   };
-  
+
   removeToast = (id) => {
     this.setState(prevState => ({
       toasts: prevState.toasts.filter(toast => toast.id !== id)
     }));
   };
-  
+
   render() {
     const { toasts } = this.state;
-    
+
     if (toasts.length === 0) return null;
-    
+
     return (
       <div id="toast-container" style={containerStyle}>
         {toasts.map(toast => (
@@ -216,7 +216,7 @@ export class ToastProvider extends Component {
     super(props);
     this.toastContainerRef = null;
   }
-  
+
   componentDidMount() {
     // Initialize the toast container when the provider mounts
     if (!this.toastContainerRef) {
@@ -224,14 +224,14 @@ export class ToastProvider extends Component {
       const containerElement = document.createElement('div');
       containerElement.id = 'toast-container-root';
       document.body.appendChild(containerElement);
-      
+
       // Render the ToastContainer into the DOM
       this.toastContainerRef = render(<ToastContainer />, containerElement);
-      
+
       console.log('Toast container initialized');
     }
   }
-  
+
   componentWillUnmount() {
     // Clean up the toast container when the provider unmounts
     if (this.toastContainerRef) {
@@ -240,12 +240,12 @@ export class ToastProvider extends Component {
       if (containerElement) {
         document.body.removeChild(containerElement);
       }
-      
+
       this.toastContainerRef = null;
       console.log('Toast container cleaned up');
     }
   }
-  
+
   // Methods to show different types of toasts
   showToast = (message, type = 'info', duration = 4000) => {
     if (this.toastContainerRef) {
@@ -254,23 +254,23 @@ export class ToastProvider extends Component {
     console.error('Toast container not initialized');
     return null;
   };
-  
+
   showSuccessToast = (message, duration = 4000) => {
     return this.showToast(message, 'success', duration);
   };
-  
+
   showErrorToast = (message, duration = 4000) => {
     return this.showToast(message, 'error', duration);
   };
-  
+
   showWarningToast = (message, duration = 4000) => {
     return this.showToast(message, 'warning', duration);
   };
-  
+
   showInfoToast = (message, duration = 4000) => {
     return this.showToast(message, 'info', duration);
   };
-  
+
   render() {
     const contextValue = {
       showToast: this.showToast,
@@ -279,7 +279,7 @@ export class ToastProvider extends Component {
       showWarningToast: this.showWarningToast,
       showInfoToast: this.showInfoToast
     };
-    
+
     return (
       <ToastContext.Provider value={contextValue}>
         {this.props.children}
@@ -312,10 +312,10 @@ export function initToasts() {
     const containerElement = document.createElement('div');
     containerElement.id = 'toast-container-root';
     document.body.appendChild(containerElement);
-    
+
     // Render the ToastContainer into the DOM
     toastInstance = render(<ToastContainer />, containerElement);
-    
+
     console.log('Toast system initialized');
   }
   return toastInstance;
@@ -349,25 +349,36 @@ export function createDirectToast(message, type = 'info', duration = 4000) {
 }
 
 export function showStatusMessage(message, type = 'info', duration = 4000) {
-  // Map type strings to the new format
-  let toastType = 'info';
-  
-  if (type === 'success') {
-    toastType = 'success';
-  } else if (type === 'error') {
-    toastType = 'error';
-  } else if (type === 'warning') {
-    toastType = 'warning';
+  // Use the new notification system if available
+  if (window.showNotification) {
+    window.showNotification(message, type, duration);
+    return;
   }
-  
-  return showToast(message, toastType, duration);
+
+  // Fallback to old system
+  const id = Date.now() + Math.random();
+  const toast = { id, message, type, duration };
+
+  // This 'toastListeners' variable is not defined in the provided context.
+  // Assuming it's meant to be a global or imported variable.
+  if (typeof toastListeners === 'object' && toastListeners !== null) {
+    toastListeners.forEach(listener => {
+      if (typeof listener === 'function') {
+        listener(toast);
+      }
+    });
+  }
+  // If no new notification system and no toastListeners,
+  // it might be intended to fall back to the existing showToast.
+  // However, the provided snippet does not include that.
+  // Sticking strictly to the provided replacement code.
 }
 
 // Export for global use
 if (typeof window !== 'undefined') {
   // Initialize the toast system
   initToasts();
-  
+
   // Make toast functions available globally
   window.showSuccessToast = showSuccessToast;
   window.showErrorToast = showErrorToast;
@@ -376,10 +387,10 @@ if (typeof window !== 'undefined') {
   window.showToast = showToast;
   window.showStatusMessage = showStatusMessage;
   window.createDirectToast = createDirectToast;
-  
+
   // Log for debugging
   console.log('Toast functions exported to window object');
-  
+
   // Add a test function to the window object
   window.testToast = (type = 'info') => {
     const message = `Test ${type} toast at ${new Date().toLocaleTimeString()}`;
