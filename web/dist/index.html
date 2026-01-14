@@ -1,25 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <script type="module" crossorigin src="./assets/polyfills-Cjm33dVk.js"></script>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <title>WebRTC View - LightNVR</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-      body { background-color: #03070c; font-family: 'Inter', sans-serif; }
-    </style>
-    <!-- Theme initialization script - runs before page render to prevent FOUC -->
-    <script>
-    (function() {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>WebRTC View - LightNVR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #03070c;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    #root,
+    body>div {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+  <!-- Theme initialization script - runs before page render to prevent FOUC -->
+  <script>
+    (function () {
       try {
         document.documentElement.classList.add('dark');
-        const COLOR_THEMES = {"default":{"name":"Default","light":{"hue":240,"saturation":5.9},"dark":{"hue":240,"saturation":3.7},"icon":"🎨"},"blue":{"name":"Ocean Blue","light":{"hue":217,"saturation":32},"dark":{"hue":217,"saturation":25},"icon":"🌊"},"emerald":{"name":"Forest Green","light":{"hue":160,"saturation":30},"dark":{"hue":160,"saturation":25},"icon":"🌲"},"purple":{"name":"Royal Purple","light":{"hue":265,"saturation":28},"dark":{"hue":265,"saturation":20},"icon":"👑"},"rose":{"name":"Sunset Rose","light":{"hue":350,"saturation":25},"dark":{"hue":350,"saturation":18},"icon":"🌹"},"amber":{"name":"Golden Amber","light":{"hue":45,"saturation":28},"dark":{"hue":45,"saturation":20},"icon":"⚡"},"slate":{"name":"Cool Slate","light":{"hue":215,"saturation":8},"dark":{"hue":215,"saturation":6},"icon":"🗿"}};
+        const COLOR_THEMES = { "default": { "name": "Default", "light": { "hue": 240, "saturation": 5.9 }, "dark": { "hue": 240, "saturation": 3.7 }, "icon": "🎨" }, "blue": { "name": "Ocean Blue", "light": { "hue": 217, "saturation": 32 }, "dark": { "hue": 217, "saturation": 25 }, "icon": "🌊" }, "emerald": { "name": "Forest Green", "light": { "hue": 160, "saturation": 30 }, "dark": { "hue": 160, "saturation": 25 }, "icon": "🌲" }, "purple": { "name": "Royal Purple", "light": { "hue": 265, "saturation": 28 }, "dark": { "hue": 265, "saturation": 20 }, "icon": "👑" }, "rose": { "name": "Sunset Rose", "light": { "hue": 350, "saturation": 25 }, "dark": { "hue": 350, "saturation": 18 }, "icon": "🌹" }, "amber": { "name": "Golden Amber", "light": { "hue": 45, "saturation": 28 }, "dark": { "hue": 45, "saturation": 20 }, "icon": "⚡" }, "slate": { "name": "Cool Slate", "light": { "hue": 215, "saturation": 8 }, "dark": { "hue": 215, "saturation": 6 }, "icon": "🗿" } };
         const savedTheme = localStorage.getItem('lightnvr-theme');
         const savedColorIntensity = localStorage.getItem('lightnvr-color-intensity');
         const savedColorTheme = localStorage.getItem('lightnvr-color-theme');
@@ -120,9 +143,9 @@
         if (window.matchMedia('(prefers-color-scheme: dark)').matches) { document.documentElement.classList.add('dark'); }
       }
     })();
-    </script>
+  </script>
 
-    <link rel="icon" href="./img/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="./img/favicon.ico" type="image/x-icon">
   <script type="module" crossorigin src="./assets/index-DTfOwCuC.js"></script>
   <link rel="modulepreload" crossorigin href="./assets/hooks.module-DqmzS8dw.js">
   <link rel="modulepreload" crossorigin href="./assets/ToastContainer-DeJY4Zbx.js">
@@ -136,28 +159,30 @@
   <script type="module">import.meta.url;import("_").catch(()=>1);(async function*(){})().next();if(location.protocol!="file:"){window.__vite_is_modern_browser=true}</script>
   <script type="module">!function(){if(window.__vite_is_modern_browser)return;console.warn("vite: loading legacy chunks, syntax error above and the same error below should be ignored");var e=document.getElementById("vite-legacy-polyfill"),n=document.createElement("script");n.src=e.src,n.onload=function(){System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))},document.body.appendChild(n)}();</script>
 </head>
-<body class="flex flex-col min-h-screen bg-background text-foreground w-full">
-<div class="container mx-auto px-4 flex flex-col min-h-screen w-full">
+
+<body class="flex flex-col min-h-screen bg-background text-foreground w-full h-full m-0 p-0">
+  <div class="flex flex-col min-h-screen w-full h-full m-0 p-0">
     <header id="header-container" data-active-nav="nav-live">
-        <!-- Header content will be loaded by JavaScript -->
+      <!-- Header content will be loaded by JavaScript -->
     </header>
 
     <main id="main-content" class="flex-grow">
     </main>
 
     <footer id="footer-container" class="mt-auto">
-        <!-- Footer content will be loaded by JavaScript -->
+      <!-- Footer content will be loaded by JavaScript -->
     </footer>
-</div>
+  </div>
 
-<!-- UI components will be rendered here -->
-<div id="status-message-container"></div>
-<div id="snapshot-modal-container"></div>
-<div id="video-modal-container"></div>
+  <!-- UI components will be rendered here -->
+  <div id="status-message-container"></div>
+  <div id="snapshot-modal-container"></div>
+  <div id="video-modal-container"></div>
 
-<!-- Scripts -->
+  <!-- Scripts -->
   <script nomodule>!function(){var e=document,t=e.createElement("script");if(!("noModule"in t)&&"onbeforeload"in t){var n=!1;e.addEventListener("beforeload",(function(e){if(e.target===t)n=!0;else if(!e.target.hasAttribute("nomodule")||!n)return;e.preventDefault()}),!0),t.type="module",t.src=".",e.head.appendChild(t),t.remove()}}();</script>
   <script nomodule crossorigin id="vite-legacy-polyfill" src="./assets/polyfills-legacy-Dlp0zWr1.js"></script>
-  <script nomodule crossorigin id="vite-legacy-entry" data-src="./assets/index-legacy-Dg4vpdVL.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
+  <script nomodule crossorigin id="vite-legacy-entry" data-src="./assets/index-legacy-ChYGDfrh.js">System.import(document.getElementById('vite-legacy-entry').getAttribute('data-src'))</script>
 </body>
+
 </html>

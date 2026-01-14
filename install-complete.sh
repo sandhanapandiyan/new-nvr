@@ -255,7 +255,7 @@ unclutter -idle 3 &
 pkill -f chromium-browser || true
 sleep 2
 
-# Launch Chromium in kiosk mode
+# Launch Chromium in kiosk mode with full screen optimization
 chromium \
     --kiosk \
     --noerrdialogs \
@@ -274,6 +274,10 @@ chromium \
     --disable-session-crashed-bubble \
     --disable-dev-shm-usage \
     --check-for-update-interval=31536000 \
+    --window-position=0,0 \
+    --start-fullscreen \
+    --force-device-scale-factor=1 \
+    --disable-smooth-scrolling \
     --app=http://localhost:8080/ &
 
 # Optional: Add watchdog to restart Chromium if it crashes
