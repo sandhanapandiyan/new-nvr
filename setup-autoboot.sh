@@ -7,11 +7,17 @@
 
 set -e
 
-LIGHTNVR_DIR="/home/sandhanapandiyan/lightnvr"
-USER="sandhanapandiyan"
+# Auto-detect current directory and user
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LIGHTNVR_DIR="$SCRIPT_DIR"
+USER="$(whoami)"
 
 echo "🚀 Setting up LightNVR Auto-Boot for Raspberry Pi..."
 echo ""
+echo "📁 Detected LightNVR directory: $LIGHTNVR_DIR"
+echo "👤 Detected user: $USER"
+echo ""
+
 
 # 1. Create systemd service for LightNVR
 echo "📝 Creating systemd service..."
@@ -52,12 +58,12 @@ mkdir -p ~/.config/autostart
 
 # 5. Create Chromium kiosk mode autostart
 echo "🌐 Setting up Chromium fullscreen kiosk..."
-tee ~/.config/autostart/lightnvr-kiosk.desktop > /dev/null << 'EOF'
+tee ~/.config/autostart/lightnvr-kiosk.desktop > /dev/null << EOF
 [Desktop Entry]
 Type=Application
 Name=LightNVR Kiosk
 Comment=Launch LightNVR in fullscreen Chromium kiosk mode
-Exec=/home/sandhanapandiyan/lightnvr/scripts/start-kiosk.sh
+Exec=$LIGHTNVR_DIR/scripts/start-kiosk.sh
 Terminal=false
 StartupNotify=false
 X-GNOME-Autostart-enabled=true
@@ -154,7 +160,7 @@ case "$1" in
         sleep 3
         pkill -f chromium-browser || true
         sleep 1
-        /home/sandhanapandiyan/lightnvr/scripts/start-kiosk.sh &
+        $LIGHTNVR_DIR/scripts/start-kiosk.sh &
         echo "✅ LightNVR restarted"
         ;;
     status)
@@ -174,7 +180,7 @@ case "$1" in
         ;;
     kiosk)
         echo "🌐 Starting Chromium kiosk..."
-        /home/sandhanapandiyan/lightnvr/scripts/start-kiosk.sh &
+        $LIGHTNVR_DIR/scripts/start-kiosk.sh &
         echo "✅ Chromium kiosk started"
         ;;
     *)
