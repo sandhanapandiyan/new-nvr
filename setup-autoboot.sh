@@ -110,14 +110,14 @@ chromium \
     --disable-session-crashed-bubble \
     --disable-dev-shm-usage \
     --check-for-update-interval=31536000 \
-    --app=http://localhost:8080/pro-dashboard.html &
+    --app=http://localhost:8080/ &
 
 # Optional: Add watchdog to restart Chromium if it crashes
 while true; do
     sleep 60
     if ! pgrep -f "chromium-browser.*8080" > /dev/null; then
         echo "Chromium crashed, restarting..."
-        chromium-browser --kiosk --app=http://localhost:8080/pro-dashboard.html &
+        chromium-browser --kiosk --app=http://localhost:8080/ &
     fi
 done
 EOF
@@ -218,7 +218,7 @@ echo "  2. LightNVR will auto-start"
 echo "  3. Chromium will launch in fullscreen after login"
 echo ""
 echo "💡 Tips:"
-echo "  • The dashboard will load at: http://localhost:8080/pro-dashboard.html"
+echo "  • The dashboard will load at: http://localhost:8080/"
 echo "  • Press F11 to exit fullscreen manually"
 echo "  • Press Alt+F4 to close Chromium"
 echo "  • Screen will never sleep/blank"
