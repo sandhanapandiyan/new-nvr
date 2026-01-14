@@ -129,7 +129,7 @@ echo "  STEP 6/8: Installing Chromium Browser & Utilities"
 echo "═══════════════════════════════════════════════════════════════"
 echo "📦 Installing: chromium, unclutter, x11-xserver-utils..."
 sudo apt-get install -y \
-    chromium-browser \
+    chromium \
     unclutter \
     x11-xserver-utils \
     xdotool
