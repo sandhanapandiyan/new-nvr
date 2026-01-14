@@ -92,7 +92,7 @@ pkill -f chromium || true
 sleep 2
 
 # Launch Chromium in kiosk mode
-chromium-browser \
+chromium \
     --kiosk \
     --noerrdialogs \
     --disable-infobars \
@@ -132,7 +132,7 @@ if ! command -v unclutter &> /dev/null; then
     sudo apt-get install -y unclutter
 fi
 
-if ! command -v chromium-browser &> /dev/null; then
+if ! command -v chromium &> /dev/null; then
     echo "Installing Chromium browser..."
     sudo apt-get install -y chromium-browser
 fi
