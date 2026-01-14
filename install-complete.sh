@@ -474,5 +474,20 @@ if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
 fi
 
 echo ""
-echo "✨ Installation script complete!"
+echo "═══════════════════════════════════════════════════════════════"
 echo ""
+echo "✨ Installation completed successfully!"
+echo ""
+echo "🔄 System will reboot in 10 seconds..."
+echo ""
+echo "   After reboot:"
+echo "   ✅ LightNVR will auto-start automatically"
+echo "   ✅ Chromium will launch in fullscreen kiosk mode"
+echo "   ✅ Dashboard will load at http://localhost:8080/"
+echo "   ✅ Screen will never sleep/blank"
+echo ""
+echo "   Press Ctrl+C NOW to cancel reboot"
+echo ""
+sleep 10
+echo "� Rebooting now..."
+sudo reboot
