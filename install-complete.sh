@@ -68,7 +68,7 @@ echo ""
 echo "═══════════════════════════════════════════════════════════════"
 echo "  STEP 3/8: Installing System Libraries"
 echo "═══════════════════════════════════════════════════════════════"
-echo "📦 Installing: FFmpeg, SQLite, libxml2, libssl..."
+echo "📦 Installing: FFmpeg, SQLite, libxml2, libssl, mbedtls..."
 sudo apt-get install -y \
     libavcodec-dev \
     libavformat-dev \
@@ -80,6 +80,7 @@ sudo apt-get install -y \
     libxml2-dev \
     libcurl4-openssl-dev \
     libssl-dev \
+    libmbedtls-dev \
     zlib1g-dev
 echo "✅ System libraries installed"
 echo ""
