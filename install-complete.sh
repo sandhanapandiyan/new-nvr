@@ -127,7 +127,7 @@ echo ""
 echo "═══════════════════════════════════════════════════════════════"
 echo "  STEP 6/8: Installing Chromium Browser & Utilities"
 echo "═══════════════════════════════════════════════════════════════"
-echo "📦 Installing: chromium-browser, unclutter, x11-xserver-utils..."
+echo "📦 Installing: chromium, unclutter, x11-xserver-utils..."
 sudo apt-get install -y \
     chromium-browser \
     unclutter \
@@ -254,7 +254,7 @@ pkill -f chromium-browser || true
 sleep 2
 
 # Launch Chromium in kiosk mode
-chromium-browser \
+chromium \
     --kiosk \
     --noerrdialogs \
     --disable-infobars \
@@ -313,7 +313,7 @@ case "$1" in
         echo "🔄 Restarting LightNVR..."
         sudo systemctl restart lightnvr.service
         sleep 3
-        pkill -f chromium-browser || true
+        pkill -f chromium || true
         sleep 1
         $LIGHTNVR_DIR/scripts/start-kiosk.sh &
         echo "✅ LightNVR restarted"
@@ -323,7 +323,7 @@ case "$1" in
         sudo systemctl status lightnvr.service --no-pager
         echo ""
         echo "🌐 Chromium Status:"
-        if pgrep -f "chromium-browser.*8080" > /dev/null; then
+        if pgrep -f "chromium.*8080" > /dev/null; then
             echo "✅ Chromium is running in kiosk mode"
         else
             echo "❌ Chromium is not running"
@@ -463,7 +463,7 @@ if [[ $REPLY =~ ^[Yy]$ ]] || [[ -z $REPLY ]]; then
         
         # Try to open browser if in X session
         if [ -n "$DISPLAY" ]; then
-            chromium-browser --app=http://localhost:8080/ &
+            chromium --app=http://localhost:8080/ &
         fi
     else
         echo "⚠️  LightNVR failed to start. Check logs:"
